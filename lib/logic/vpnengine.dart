@@ -1,4 +1,4 @@
-import 'package:openvpn_flutter/openvpn_flutter.dart';
+import 'package:openvpn_flutter_update/openvpn_flutter.dart';
 import 'dart:developer' as developer;
 
 class VpnEngine {

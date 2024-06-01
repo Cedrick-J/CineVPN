@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:cinevpn/sdk/load_internet_requests.dart';
+import 'load_internet_requests.dart';
 
 class AppConfig {}
 

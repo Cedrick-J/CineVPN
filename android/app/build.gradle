@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace "com.example.cinevpn"
+    namespace "info.habertech.cinevpn"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

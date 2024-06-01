@@ -33,12 +33,11 @@ class _ServerLocationState extends State<ServerLocation> {
     super.dispose();
   }
 
-  Future<void> _loadServerData() async {
+  Future<List<VpnGateVPNServer>> _loadServerData() async {
     final List<VpnGateVPNServer> servers = await getVPNServers();
-    setState(() {
-      _serverData = servers;
-      _searchedServerData = servers;
-    });
+    _serverData = servers;
+    _searchedServerData = servers;
+    return _searchedServerData;
   }
 
   _loadSearchedServers(String? textVal) {
@@ -345,7 +344,7 @@ class _ServerLocationState extends State<ServerLocation> {
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'All Server',
+                        'All Servers',
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
@@ -355,131 +354,9 @@ class _ServerLocationState extends State<ServerLocation> {
                     const SizedBox(
                       height: 15,
                     ),
-                    ..._searchedServerData.map((server) {
-                      return GestureDetector(
-                        onTap: () async {
-                          developer.log(server.toString());
-                          server.flagImageSrc =
-                              countryFlagFile[server.countryLong]!;
-                          Navigator.pop(
-                            context,
-                            server,
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: Material(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7),
-                            child: InkWell(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                ),
-                                width: double.infinity,
-                                height: 66,
-                                child: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                            countryFlagFile[
-                                                    server.countryLong] ??
-                                                'assets/images/country_flags/united_states.png',
-                                          )),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  server.countryLong,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: server.supportsUdp
-                                                        ? const Color(
-                                                            0xff28C0C1)
-                                                        : Colors.orange,
-                                                  ),
-                                                  child: Container(
-                                                    width: 15,
-                                                    height: 15,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: server.supportsUdp
-                                                          ? const Color(
-                                                              0xffFAFAFA)
-                                                          : Colors.white
-                                                              .withOpacity(0.8),
-                                                    ),
-                                                    child: Icon(
-                                                      server.supportsUdp
-                                                          ? Icons
-                                                              .electric_bolt_outlined
-                                                          : Icons.star,
-                                                      size: 10,
-                                                      color: server.supportsUdp
-                                                          ? const Color(
-                                                              0xff28C0C1)
-                                                          : Colors.orange,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Text(
-                                              // '${server.noOfLocations} Locations',
-                                              'ping: ${server.ping}ms | ${server.speed} Mbps',
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: kColorBg.withOpacity(0.7),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        size: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    })
-                    // All servers
+                    // ALLSERVERS
+                    _showAllServers()
+                    // ALLSERVERS
                   ]),
                 ),
               ),
@@ -487,6 +364,145 @@ class _ServerLocationState extends State<ServerLocation> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _showAllServers() {
+    return FutureBuilder(
+      future: _loadServerData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text('Error loading servers'),
+          );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasData) {
+          // You should return a widget here
+
+          // WHEN SERVERS ARE LOADED
+          return Column(
+              children: _searchedServerData.map((server) {
+            return GestureDetector(
+              onTap: () async {
+                developer.log(server.toString());
+                server.flagImageSrc = countryFlagFile[server.countryLong]!;
+                Navigator.pop(
+                  context,
+                  server,
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: Material(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(7),
+                  child: InkWell(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      width: double.infinity,
+                      height: 66,
+                      child: Row(
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: CircleAvatar(
+                                    backgroundImage: AssetImage(
+                                  countryFlagFile[server.countryLong] ??
+                                      'assets/images/country_flags/united_states.png',
+                                )),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        server.countryLong,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: server.supportsUdp
+                                              ? const Color(0xff28C0C1)
+                                              : Colors.orange,
+                                        ),
+                                        child: Container(
+                                          width: 15,
+                                          height: 15,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: server.supportsUdp
+                                                ? const Color(0xffFAFAFA)
+                                                : Colors.white.withOpacity(0.8),
+                                          ),
+                                          child: Icon(
+                                            server.supportsUdp
+                                                ? Icons.electric_bolt_outlined
+                                                : Icons.star,
+                                            size: 10,
+                                            color: server.supportsUdp
+                                                ? const Color(0xff28C0C1)
+                                                : Colors.orange,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    // '${server.noOfLocations} Locations',
+                                    'ping: ${server.ping}ms | ${server.speed} Mbps',
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: kColorBg.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList() // End of server mapping
+              );
+        } // End of if serversLoaded and has data
+        return const Placeholder(); //Inacse == to kill null warning
+      }, //Builder
     );
   }
 }
