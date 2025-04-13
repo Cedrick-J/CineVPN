@@ -8,7 +8,7 @@ import 'package:cinevpn/logic/locations_map.dart' show countryFlagFile;
 const kColorBg = Color(0xffE6E7F0);
 
 class ServerLocation extends StatefulWidget {
-  const ServerLocation({Key? key}) : super(key: key);
+  const ServerLocation({super.key});
 
   @override
   State<ServerLocation> createState() => _ServerLocationState();

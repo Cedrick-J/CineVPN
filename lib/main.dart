@@ -1,13 +1,13 @@
+import 'package:cinevpn/screens/wireguard_one.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cinevpn/screens/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((value) => runApp(const MyApp()));
+  ]).then((value) => runApp(WireguardApp())); //runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: WireguardApp(), // SplashScreen(),
     );
   }
 }

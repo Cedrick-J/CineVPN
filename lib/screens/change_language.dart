@@ -5,7 +5,7 @@ import 'package:cinevpn/screens/home_screen.dart';
 const kColorBg = Color(0xffE6E7F0);
 
 class ChangeLanguage extends StatefulWidget {
-  const ChangeLanguage({Key? key}) : super(key: key);
+  const ChangeLanguage({super.key});
 
   @override
   State<ChangeLanguage> createState() => _ChangeLanguageState();
